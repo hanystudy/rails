@@ -29,6 +29,7 @@ module ActiveSupport
     # before any of the rules that may already have been loaded.
     class Inflections
       @__instance__ = Concurrent::Map.new
+      # 这里用Concurrent::Map的目的是保证采用线程安全的结构，因为Inflections本身采用单例模式
 
       class Uncountables < Array
         def initialize

@@ -25,6 +25,7 @@
 
 require "securerandom"
 require_relative "active_support/dependencies/autoload"
+# 加载autoload
 require_relative "active_support/version"
 require_relative "active_support/logger"
 require_relative "active_support/lazy_load_hooks"

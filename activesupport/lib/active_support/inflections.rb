@@ -9,6 +9,7 @@ require_relative "inflector/inflections"
 # This is a safety measure to keep existing applications from breaking.
 #++
 module ActiveSupport
+  # 初始化
   Inflector.inflections(:en) do |inflect|
     inflect.plural(/$/, "s")
     inflect.plural(/s$/i, "s")

@@ -16,6 +16,7 @@ module ActiveSupport
   # than English, please correct or add them yourself (explained below).
   module Inflector
     extend self
+    # extend self可以把module所有方法暴露成singleton methods
 
     # Returns the plural form of the word in the string.
     #
@@ -69,12 +70,14 @@ module ActiveSupport
     def camelize(term, uppercase_first_letter = true)
       string = term.to_s
       if uppercase_first_letter
+        # sub只替换第一个匹配结果
         string = string.sub(/^[a-z\d]*/) { |match| inflections.acronyms[match] || match.capitalize }
       else
         string = string.sub(/^(?:#{inflections.acronym_regex}(?=\b|[A-Z_])|\w)/) { |match| match.downcase }
       end
       string.gsub!(/(?:_|(\/))([a-z\d]*)/i) { "#{$1}#{inflections.acronyms[$2] || $2.capitalize}" }
-      string.gsub!("/".freeze, "::".freeze)
+      # 这里的freeze总的还是提升效率，如as hash key的frozen string
+      string.gsub!('/'.freeze, '::'.freeze)
       string
     end
 

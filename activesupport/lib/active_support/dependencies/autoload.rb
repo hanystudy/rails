@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# inflector用于单词的单复数转换
 require_relative "../inflector/methods"
 
 module ActiveSupport
