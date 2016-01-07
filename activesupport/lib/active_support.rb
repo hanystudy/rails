@@ -29,6 +29,7 @@ require_relative "active_support/dependencies/autoload"
 require_relative "active_support/version"
 # 增强了ruby的日志系统
 require_relative "active_support/logger"
+# 延迟加载hook
 require_relative "active_support/lazy_load_hooks"
 require_relative "active_support/core_ext/date_and_time/compatibility"
 

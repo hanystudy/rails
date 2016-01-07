@@ -48,6 +48,7 @@ module ActiveSupport
       end
     end
 
+    # 执行hook
     def run_load_hooks(name, base = Object)
       @loaded[name] << base
       @load_hooks[name].each do |hook, options|
