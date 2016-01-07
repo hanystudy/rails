@@ -27,6 +27,7 @@ require "securerandom"
 require_relative "active_support/dependencies/autoload"
 # 加载autoload
 require_relative "active_support/version"
+# 增强了ruby的日志系统
 require_relative "active_support/logger"
 require_relative "active_support/lazy_load_hooks"
 require_relative "active_support/core_ext/date_and_time/compatibility"

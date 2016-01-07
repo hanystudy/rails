@@ -5,6 +5,7 @@ require_relative "core_ext/module/attribute_accessors"
 require "concurrent"
 
 module LoggerSilence
+  # 提供silence方法用于在代码块中设置日志类型
   extend ActiveSupport::Concern
 
   included do

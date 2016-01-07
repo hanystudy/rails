@@ -2,6 +2,7 @@
 
 require_relative "logger_silence"
 require_relative "logger_thread_safe_level"
+# 标准库logger
 require "logger"
 
 module ActiveSupport
@@ -90,6 +91,7 @@ module ActiveSupport
     end
 
     Logger::Severity.constants.each do |severity|
+      # 增加对应的检查方法
       class_eval(<<-EOT, __FILE__, __LINE__ + 1)
         def #{severity.downcase}?                # def debug?
           Logger::#{severity} >= level           #   DEBUG >= level
