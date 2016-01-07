@@ -45,6 +45,7 @@ module ActiveSupport
         @_autoloads[const_name] = path
       end
 
+      # autoload实际上是Kernel的方法，这里只是用Inflector包装了一下
       super const_name, path
     end
 
@@ -62,6 +63,7 @@ module ActiveSupport
       @_at_path = old_path
     end
 
+    # 定义eager autoload
     def eager_autoload
       old_eager, @_eager_autoload = @_eager_autoload, true
       yield
@@ -69,6 +71,7 @@ module ActiveSupport
       @_eager_autoload = old_eager
     end
 
+    # 这里就是对定义了eager autoload的常量进行eager load
     def eager_load!
       @_autoloads.each_value { |file| require file }
     end
