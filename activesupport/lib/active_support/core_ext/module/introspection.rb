@@ -7,6 +7,7 @@ class Module
   #
   #   M::N.parent_name # => "M"
   def parent_name
+    # 返回包含模块的名字
     if defined?(@parent_name)
       @parent_name
     else
@@ -32,6 +33,7 @@ class Module
   #   M.parent          # => Object
   #   Module.new.parent # => Object
   def parent
+    # 返回包含模块名
     parent_name ? ActiveSupport::Inflector.constantize(parent_name) : Object
   end
 
@@ -48,6 +50,7 @@ class Module
   #   M::N.parents # => [M, Object]
   #   X.parents    # => [M, Object]
   def parents
+    # 返回所有的包含模块名
     parents = []
     if parent_name
       parts = parent_name.split("::")

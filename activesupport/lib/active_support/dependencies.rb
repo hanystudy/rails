@@ -10,6 +10,7 @@ require "pathname"
 require_relative "core_ext/module/aliasing"
 # 提供class variables accessors
 require_relative "core_ext/module/attribute_accessors"
+# 自省模块，获取当前模块的上下文模块
 require_relative "core_ext/module/introspection"
 require_relative "core_ext/module/anonymous"
 require_relative "core_ext/object/blank"
