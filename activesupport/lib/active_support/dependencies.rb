@@ -12,6 +12,7 @@ require_relative "core_ext/module/aliasing"
 require_relative "core_ext/module/attribute_accessors"
 # 自省模块，获取当前模块的上下文模块
 require_relative "core_ext/module/introspection"
+# 匿名性判别函数
 require_relative "core_ext/module/anonymous"
 require_relative "core_ext/object/blank"
 require_relative "core_ext/kernel/reporting"
