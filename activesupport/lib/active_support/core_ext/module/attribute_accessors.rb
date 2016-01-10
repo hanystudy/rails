@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# extract_options实际上是为遍历函数的选项参数提供方便，特别是在rails中
+# 经常用到def perform(:target, :options) end这样的函数定义规则
+# 而:options通常是一个Hash
 require_relative "../array/extract_options"
 require_relative "../regexp"
 
@@ -7,6 +10,7 @@ require_relative "../regexp"
 # class/module attributes, just like the native attr* accessors for instance
 # attributes.
 class Module
+  # 主要是为class attribute提供宏定义
   # Defines a class attribute and creates a class and instance reader methods.
   # The underlying class variable is set to +nil+, if it is not previously
   # defined. All class and instance methods created will be public, even if
@@ -62,6 +66,7 @@ class Module
         end
       EOS
 
+      # 是否定义相应的instance方法
       if instance_reader && instance_accessor
         class_eval(<<-EOS, __FILE__, __LINE__ + 1)
           def #{sym}

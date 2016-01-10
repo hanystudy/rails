@@ -3,8 +3,12 @@
 require "set"
 require "thread"
 require "concurrent/map"
+# pathname是标准库中一个增强型File API，相比较原生core中的C函数形式更加OO一些
 require "pathname"
+# 以下部分是对core的增强
+# alias_method_chain已经被ruby 2.0推出的prepend替代
 require_relative "core_ext/module/aliasing"
+# 提供class variables accessors
 require_relative "core_ext/module/attribute_accessors"
 require_relative "core_ext/module/introspection"
 require_relative "core_ext/module/anonymous"
