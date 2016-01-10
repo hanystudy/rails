@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 module ActiveSupport
+  # 解释了concern的来龙去脉
   # A typical module looks like this:
   #
   #   module M
+        # 最初的Mix-in Class methods实现，即采用了include+extend
   #     def self.included(base)
   #       base.extend ClassMethods
   #       base.class_eval do
   #         scope :disabled, -> { where(disabled: true) }
+            # 示例用到了active record的named scope，相当于提供一个disabled scope功能
   #       end
   #     end
   #
@@ -38,6 +41,7 @@ module ActiveSupport
   # following:
   #
   #   module Foo
+        # 问题出现在有层次依赖的情况
   #     def self.included(base)
   #       base.class_eval do
   #         def self.method_injected_by_foo
@@ -62,6 +66,7 @@ module ActiveSupport
   # could try to hide these from +Host+ directly including +Foo+ in +Bar+:
   #
   #   module Bar
+        # 而直接的层次依赖就无法满足于include+extend模式
   #     include Foo
   #     def self.included(base)
   #       base.method_injected_by_foo
@@ -77,7 +82,7 @@ module ActiveSupport
   # module dependencies are properly resolved:
   #
   #   require 'active_support/concern'
-  #
+      # 利用Concern就可以简单实现Mix-in Class methods+层级依赖
   #   module Foo
   #     extend ActiveSupport::Concern
   #     included do
@@ -107,9 +112,11 @@ module ActiveSupport
     end
 
     def self.extended(base) #:nodoc:
+      # Concern需要extended到目标Module中
       base.instance_variable_set(:@_dependencies, [])
     end
 
+    # 下述方法相当于成为目标Module的self方法
     def append_features(base)
       if base.instance_variable_defined?(:@_dependencies)
         base.instance_variable_get(:@_dependencies) << self

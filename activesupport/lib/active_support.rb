@@ -36,6 +36,7 @@ require_relative "active_support/core_ext/date_and_time/compatibility"
 module ActiveSupport
   extend ActiveSupport::Autoload
 
+  # concern解决了module无法完美支持class methods的问题
   autoload :Concern
   autoload :CurrentAttributes
   autoload :Dependencies
