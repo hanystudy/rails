@@ -4,6 +4,7 @@ require_relative "../../inflector/methods"
 require_relative "../../values/time_zone"
 
 class Time
+  # 这里主要是对Time进行了格式化方面的增强
   DATE_FORMATS = {
     db: "%Y-%m-%d %H:%M:%S",
     number: "%Y%m%d%H%M%S",

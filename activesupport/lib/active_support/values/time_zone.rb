@@ -5,6 +5,7 @@ require "concurrent/map"
 require_relative "../core_ext/object/blank"
 
 module ActiveSupport
+  # TimeZone一方面是把TZInfo标准映射成更通俗的叫法，另一方面也是Rails内部采用的时区类型
   # The TimeZone class serves as a wrapper around TZInfo::Timezone instances.
   # It allows us to do the following:
   #

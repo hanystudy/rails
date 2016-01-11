@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
 # Hack to load json gem first so we can overwrite its to_json.
+# 本身是对标准库json的增强
 require "json"
 require "bigdecimal"
 require "uri/generic"
 require "pathname"
 require_relative "../big_decimal/conversions" # for #to_s
+# except是对hash的黑名单过滤
 require_relative "../hash/except"
+# slice是对hash的白名单过滤
 require_relative "../hash/slice"
 require_relative "instance_variables"
+# 该增强主要是为了去除instance variables定义的@标识
 require "time"
+# 涉及时间的格式化
 require_relative "../time/conversions"
 require_relative "../date_time/conversions"
 require_relative "../date/conversions"
@@ -33,6 +38,7 @@ require_relative "../date/conversions"
 module ActiveSupport
   module ToJsonWithActiveSupportEncoder # :nodoc:
     def to_json(options = nil)
+      # to_json只有在require 'json'后才生效
       if options.is_a?(::JSON::State)
         # Called from JSON.{generate,dump}, forward it to JSON gem's to_json
         super(options)
@@ -50,6 +56,7 @@ end
 
 class Object
   def as_json(options = nil) #:nodoc:
+    # as_json返回的不是字符串，而实际上是Hash
     if respond_to?(:to_hash)
       to_hash.as_json(options)
     else

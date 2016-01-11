@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../core_ext/module/attribute_accessors"
+# 委托模式
 require_relative "../core_ext/module/delegation"
 require "json"
 
@@ -9,6 +10,7 @@ module ActiveSupport
   mattr_accessor :parse_json_times
 
   module JSON
+    # ActiveSupport::JSON只是多了一个ISO 8601的时间转换功能
     # matches YAML-formatted dates
     DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
     DATETIME_REGEX = /^(?:\d{4}-\d{2}-\d{2}|\d{4}-\d{1,2}-\d{1,2}[T \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?)?)$/
@@ -46,6 +48,7 @@ module ActiveSupport
       private
 
       def convert_dates_from(data)
+        # 这是典型的JSON数据递归，如果要自己做可以参考
         case data
         when nil
           nil

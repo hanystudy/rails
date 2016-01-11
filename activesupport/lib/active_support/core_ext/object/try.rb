@@ -4,6 +4,7 @@ require "delegate"
 
 module ActiveSupport
   module Tryable #:nodoc:
+    # try方法是对respond_to?的增强
     def try(*a, &b)
       try!(*a, &b) if a.empty? || respond_to?(a.first)
     end

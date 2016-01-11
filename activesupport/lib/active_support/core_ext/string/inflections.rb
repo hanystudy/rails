@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+# 这里的inflections主要是提供针对core的String增强
+# 实际上是基于ActiveSupport自己的inflectors
+# 除此之外采用inflectors的还有autoload
 require_relative "../../inflector/methods"
+# String中采用的Inflectors实际更复杂，这里带有直译的色彩
 require_relative "../../inflector/transliterate"
 
 # String inflections define new methods on the String class to transform names for different purposes.

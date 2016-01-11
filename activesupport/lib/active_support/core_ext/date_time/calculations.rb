@@ -3,6 +3,7 @@
 require "date"
 
 class DateTime
+  # 和日期有关的时间增强
   class << self
     # Returns <tt>Time.zone.now.to_datetime</tt> when <tt>Time.zone</tt> or
     # <tt>config.time_zone</tt> are set, otherwise returns

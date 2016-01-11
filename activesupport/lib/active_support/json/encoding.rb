@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 这里引入了ActiveSupport对核心JSON的扩展
 require_relative "../core_ext/object/json"
 require_relative "../core_ext/module/delegation"
 

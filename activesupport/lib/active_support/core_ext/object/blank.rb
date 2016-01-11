@@ -3,6 +3,7 @@
 require_relative "../regexp"
 
 class Object
+  # 主要是为了提供空指针验证
   # An object is blank if it's false, empty, or a whitespace string.
   # For example, +false+, '', '   ', +nil+, [], and {} are all blank.
   #
@@ -16,6 +17,7 @@ class Object
   #
   # @return [true, false]
   def blank?
+    # blank?和present?都是ActiveSupport中的经典验证方法
     respond_to?(:empty?) ? !!empty? : !self
   end
 
@@ -43,6 +45,7 @@ class Object
   #
   # @return [Object]
   def presence
+    # 在present?+赋值语句很奏效
     self if present?
   end
 end
