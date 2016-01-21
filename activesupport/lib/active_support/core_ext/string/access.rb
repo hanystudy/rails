@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class String
+  # String的访问器增强
   # If you pass a single integer, returns a substring of one character at that
   # position. The first character of the string is at position 0, the next at
   # position 1, and so on. If a range is supplied, a substring containing

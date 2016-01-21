@@ -5,6 +5,7 @@ module ActiveSupport #:nodoc:
     autoload :Chars, "active_support/multibyte/chars"
     autoload :Unicode, "active_support/multibyte/unicode"
 
+    # 默认是对UTF-8的封装
     # The proxy class returned when calling mb_chars. You can use this accessor
     # to configure your own proxy class so you can support other encodings. See
     # the ActiveSupport::Multibyte::Chars implementation for an example how to

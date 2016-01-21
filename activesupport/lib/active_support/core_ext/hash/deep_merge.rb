@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Hash
+  # 递归merge两个Hash对象
   # Returns a new hash with +self+ and +other_hash+ merged recursively.
   #
   #   h1 = { a: true, b: { c: [1, 2, 3] } }

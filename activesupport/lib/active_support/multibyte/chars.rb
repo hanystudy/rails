@@ -8,6 +8,7 @@ require_relative "../core_ext/regexp"
 
 module ActiveSupport #:nodoc:
   module Multibyte #:nodoc:
+    # Multibyte提供了对字符串的各种编码形式封装，默认采用UTF-8。
     # Chars enables you to work transparently with UTF-8 encoding in the Ruby
     # String class without having extensive knowledge about the encoding. A
     # Chars object accepts a string upon initialization and proxies String

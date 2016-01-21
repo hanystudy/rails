@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "core_ext/hash/deep_merge"
+# except和slice在Hash的增强中互为逆操作
 require_relative "core_ext/hash/except"
 require_relative "core_ext/hash/slice"
 begin
