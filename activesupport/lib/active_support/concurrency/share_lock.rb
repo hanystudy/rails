@@ -1,19 +1,24 @@
 # frozen_string_literal: true
 
 require "thread"
+# https://en.wikipedia.org/wiki/Monitor_%28synchronization%29
 require "monitor"
 
 module ActiveSupport
   module Concurrency
+    # 共享/排它锁
     # A share/exclusive lock, otherwise known as a read/write lock.
     #
+    # 也叫读写锁，其实就是允许并发读，但只允许单独写
     # https://en.wikipedia.org/wiki/Readers%E2%80%93writer_lock
     class ShareLock
       include MonitorMixin
+      # 这个主要来源于monitor库，用于进行互斥操作。
 
       # We track Thread objects, instead of just using counters, because
       # we need exclusive locks to be reentrant, and we need to be able
       # to upgrade share locks to exclusive.
+      # 这个是自己手写的读/写锁，由于要求锁能够被临时切换，因此采用了Monitor作为线程安全的监控器
 
       def raw_state # :nodoc:
         synchronize do
@@ -51,6 +56,7 @@ module ActiveSupport
         super()
 
         @cv = new_cond
+        # monitor的一个好处就是condition variables，能够有效避免线程饥饿。
 
         @sharing = Hash.new(0)
         @waiting = {}
@@ -73,6 +79,7 @@ module ActiveSupport
       # is awaiting a lock, it is not running any other code. With
       # +purpose+ matching, it is possible to yield only to other
       # threads whose activity will not interfere.
+      # 获取排它锁
       def start_exclusive(purpose: nil, compatible: [], no_wait: false)
         synchronize do
           unless @exclusive_thread == Thread.current
@@ -93,6 +100,7 @@ module ActiveSupport
 
       # Relinquish the exclusive lock. Must only be called by the thread
       # that called start_exclusive (and currently holds the lock).
+      # 放弃排它锁
       def stop_exclusive(compatible: [])
         synchronize do
           raise "invalid unlock" if @exclusive_thread != Thread.current
@@ -112,6 +120,7 @@ module ActiveSupport
       end
 
       def start_sharing
+        # 获取共享锁
         synchronize do
           if @sharing[Thread.current] > 0 || @exclusive_thread == Thread.current
             # We already hold a lock; nothing to wait for
@@ -129,6 +138,7 @@ module ActiveSupport
       end
 
       def stop_sharing
+        # 放弃共享锁
         synchronize do
           if @sharing[Thread.current] > 1
             @sharing[Thread.current] -= 1

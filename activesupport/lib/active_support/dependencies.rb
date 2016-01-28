@@ -19,6 +19,7 @@ require_relative "core_ext/kernel/reporting"
 require_relative "core_ext/load_error"
 require_relative "core_ext/name_error"
 require_relative "core_ext/string/starts_ends_with"
+# 并发锁API
 require_relative "dependencies/interlock"
 require_relative "inflector"
 
@@ -26,6 +27,7 @@ module ActiveSupport #:nodoc:
   module Dependencies #:nodoc:
     extend self
 
+    # 这里初始化了一个锁
     mattr_accessor :interlock, default: Interlock.new
 
     # :doc:

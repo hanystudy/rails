@@ -5,6 +5,7 @@ require_relative "../concurrency/share_lock"
 module ActiveSupport #:nodoc:
   module Dependencies #:nodoc:
     class Interlock
+      # Interlock封装了共享锁和排它锁两个接口，并抽象成排它加载和共享运行两种API
       def initialize # :nodoc:
         @lock = ActiveSupport::Concurrency::ShareLock.new
       end

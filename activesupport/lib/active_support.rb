@@ -40,6 +40,7 @@ module ActiveSupport
   autoload :Concern
   autoload :CurrentAttributes
   autoload :Dependencies
+  # 各类依赖
   autoload :DescendantsTracker
   autoload :ExecutionWrapper
   autoload :Executor
