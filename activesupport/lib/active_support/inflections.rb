@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 词汇屈折用于对词缀按规则进行变化，如复数的屈折、单三人称的屈折等等
 require_relative "inflector/inflections"
 
 #--

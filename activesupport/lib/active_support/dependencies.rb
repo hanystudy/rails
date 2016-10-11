@@ -15,17 +15,24 @@ require_relative "core_ext/module/introspection"
 # 匿名性判别函数
 require_relative "core_ext/module/anonymous"
 require_relative "core_ext/object/blank"
+# $VERBOSE用于设置是否显示解释器警告，这里只是一个封装
 require_relative "core_ext/kernel/reporting"
+# 显示加载文件时的出错信息
 require_relative "core_ext/load_error"
+# 显示名字未定义的出错信息
 require_relative "core_ext/name_error"
+# 就是一个第三人称的alias
 require_relative "core_ext/string/starts_ends_with"
 # 并发锁API
 require_relative "dependencies/interlock"
+# 词汇屈折规则
 require_relative "inflector"
 
 module ActiveSupport #:nodoc:
+	# 该模块主要用于支持多线程环境下文件、名字的安全加载
   module Dependencies #:nodoc:
     extend self
+    # make all module methods
 
     # 这里初始化了一个锁
     mattr_accessor :interlock, default: Interlock.new
@@ -72,19 +79,23 @@ module ActiveSupport #:nodoc:
     # The set of directories from which we may automatically load files. Files
     # under these directories will be reloaded on each request in development mode,
     # unless the directory also appears in autoload_once_paths.
+    # 在开发模式时，自动加载的列表中的目录
     mattr_accessor :autoload_paths, default: []
 
     # The set of directories from which automatically loaded constants are loaded
     # only once. All directories in this set must also be present in +autoload_paths+.
+    # 只自动加载一次列表中的目录，同时包含在autoload_paths中
     mattr_accessor :autoload_once_paths, default: []
 
     # An array of qualified constant names that have been loaded. Adding a name
     # to this array will cause it to be unloaded the next time Dependencies are
     # cleared.
+    # 已经加载的常量列表
     mattr_accessor :autoloaded_constants, default: []
 
     # An array of constant names that need to be unloaded on every request. Used
     # to allow arbitrary constants to be marked for unloading.
+    # 需要每次request都需要upload的常量列表
     mattr_accessor :explicitly_unloadable_constants, default: []
 
     # The WatchStack keeps a stack of the modules being watched as files are
@@ -98,6 +109,7 @@ module ActiveSupport #:nodoc:
     # This is handled by walking back up the watch stack and adding the constants
     # found by child.rb to the list of original constants in parent.rb.
     class WatchStack
+      # WatchStack可以跟踪module栈，从而保证require的情况下不会重复load constants
       include Enumerable
 
       # @watching is a stack of lists of constants being watched. For instance,
