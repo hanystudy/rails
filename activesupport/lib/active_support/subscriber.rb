@@ -24,9 +24,11 @@ module ActiveSupport
   # After configured, whenever a "sql.active_record" notification is published,
   # it will properly dispatch the event (ActiveSupport::Notifications::Event) to
   # the +sql+ method.
+	# 实现类方法通知订阅功能的核心代码, 其中用到了最简单的Thread local storage
   class Subscriber
     class << self
       # Attach the subscriber to a namespace.
+			# 通过绑定方法快速定义当前模块需要订阅的通知类型
       def attach_to(namespace, subscriber = new, notifier = ActiveSupport::Notifications)
         @namespace  = namespace
         @subscriber = subscriber
@@ -78,6 +80,7 @@ module ActiveSupport
     attr_reader :patterns # :nodoc:
 
     def initialize
+			# 这里给出的thread local variable的命名空间为全局唯一
       @queue_key = [self.class.name, object_id].join "-"
       @patterns  = []
       super

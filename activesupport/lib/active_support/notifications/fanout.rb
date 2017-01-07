@@ -9,6 +9,7 @@ module ActiveSupport
     # It just pushes events to all registered log subscribers.
     #
     # This class is thread safe. All methods are reentrant.
+		# Fanout是通知类附带的、实现了线程安全的事件队列类
     class Fanout
       include Mutex_m
 

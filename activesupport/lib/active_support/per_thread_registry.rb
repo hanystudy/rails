@@ -38,6 +38,8 @@ module ActiveSupport
   # The class methods proxy to said thread local instance.
   #
   # If the class has an initializer, it must accept no arguments.
+	# 提供Thread local varaible支持，基本原理就是把实例变量以当前对象名作为命名空间
+	# 存在本地线程中，从而避免同步访问的问题
   module PerThreadRegistry
     def self.extended(object)
       object.instance_variable_set "@per_thread_registry_key", object.name.freeze

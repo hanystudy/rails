@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+# module级别的属性访问增强
 require_relative "core_ext/module/attribute_accessors"
+# class级别的属性访问增强
 require_relative "core_ext/class/attribute"
+# 实现订阅的核心代码 
 require_relative "subscriber"
 
 module ActiveSupport
@@ -36,6 +39,7 @@ module ActiveSupport
   # Log subscriber also has some helpers to deal with logging and automatically
   # flushes all logs when the request finishes (via action_dispatch.callback
   # notification) in a Rails environment.
+	# 主要实现有关日志订阅的feature, 包括输出成不同格式
   class LogSubscriber < Subscriber
     # Embed in a String to clear all previous ANSI sequences.
     CLEAR   = "\e[0m"

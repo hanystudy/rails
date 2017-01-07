@@ -25,6 +25,10 @@ module ActiveSupport
   # Then your library can be eager loaded by simply calling:
   #
   #   MyLib.eager_load!
+	#
+	#   Autoload是Rails框架的基础模块，其思想就是扩展默认的autoload方法,
+	#   通过convention定义查询规则，
+	#   同时还定义了eager load的立即加载方法
   module Autoload
     def self.extended(base) # :nodoc:
       base.class_eval do

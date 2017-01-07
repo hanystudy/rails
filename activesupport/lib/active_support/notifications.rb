@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+# 实现了一个简单插桩功能
 require_relative "notifications/instrumenter"
+# 线程安全的事件队列
 require_relative "notifications/fanout"
 require_relative "per_thread_registry"
 

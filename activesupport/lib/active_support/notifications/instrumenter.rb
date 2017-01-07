@@ -5,6 +5,8 @@ require "securerandom"
 module ActiveSupport
   module Notifications
     # Instrumenters are stored in a thread local.
+		# 这里的插桩其实是提供了一个start/finish封装,由host决定start/finish的内容，
+		# 同时还提供了一个简单的事件对象
     class Instrumenter
       attr_reader :id
 

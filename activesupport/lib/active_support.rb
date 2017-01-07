@@ -39,14 +39,19 @@ module ActiveSupport
   # concern解决了module无法完美支持class methods的问题
   autoload :Concern
   autoload :CurrentAttributes
+  # 用于解决文件、名字的依赖加载
   autoload :Dependencies
-  # 各类依赖
+	# 通过inherited钩子实现所有子孙的追踪
   autoload :DescendantsTracker
   autoload :ExecutionWrapper
   autoload :Executor
+	# 用于在i18n框架中实现词典文件的实时更新检查
   autoload :FileUpdateChecker
+	# 用于事件模型下的文件更新检查
   autoload :EventedFileUpdateChecker
+	# 提供通知订阅功能
   autoload :LogSubscriber
+	# 提供基本的通知功能, 里面实现了基于ruby的插桩功能
   autoload :Notifications
   autoload :Reloader
 
