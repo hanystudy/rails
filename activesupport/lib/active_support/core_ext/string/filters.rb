@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class String
+  # 对字符串操作的扩展
   # Returns the string, first removing all whitespace on both ends of
   # the string, and then changing remaining consecutive whitespace
   # groups into one space each.
@@ -45,6 +46,7 @@ class String
     self
   end
 
+  # 这里的truncate类似加强版ellipsis的效果
   # Truncates a given +text+ after a given <tt>length</tt> if +text+ is longer than <tt>length</tt>:
   #
   #   'Once upon a time in a world far far away'.truncate(27)

@@ -5,6 +5,8 @@ require_relative "../module/remove_method"
 require_relative "../array/extract_options"
 
 class Class
+  # 这里提供了一个仅能够被当前类改变的类变量定义,属于Class的核心扩展之一
+  # 其基本原理是把相关的值存储在metaclass中,但用法和普通类变量类似
   # Declare a class-level attribute whose value is inheritable by subclasses.
   # Subclasses can change their own value and it will not impact parent class.
   #
@@ -88,6 +90,7 @@ class Class
     options = attrs.extract_options!
     instance_reader    = options.fetch(:instance_accessor, true) && options.fetch(:instance_reader, true)
     instance_writer    = options.fetch(:instance_accessor, true) && options.fetch(:instance_writer, true)
+    # fetch的第二个参数相当于提供了一个默认值，否则会报异常
     instance_predicate = options.fetch(:instance_predicate, true)
     default_value      = options.fetch(:default, nil)
 
@@ -128,6 +131,7 @@ class Class
           if instance_variable_defined?(ivar)
             instance_variable_get ivar
           else
+            #public_send只查找public方法
             self.class.public_send name
           end
         end

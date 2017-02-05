@@ -2,10 +2,14 @@
 
 require "singleton"
 
+# 提供将任意方法标记为deprecated的能力
 module ActiveSupport
   # \Deprecation specifies the API used by Rails to deprecate methods, instance
   # variables, objects and constants.
   class Deprecation
+    # 这里解释为什么要在Deprecation内部require, 主要还是因为Dreprecation作用范围
+    # 且由于其被audoload, 导致下列依赖文件的加载顺序可能和其本身依赖Deprecation的
+    # 定义之间不确定, 从而引起循环依赖的问题
     # active_support.rb sets an autoload for ActiveSupport::Deprecation.
     #
     # If these requires were at the top of the file the constant would not be

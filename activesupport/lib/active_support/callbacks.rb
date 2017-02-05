@@ -1,16 +1,24 @@
 # frozen_string_literal: true
 
 require_relative "concern"
+# 为后代查询提供加速
 require_relative "descendants_tracker"
+# 使函数具备传递参数名的能力
 require_relative "core_ext/array/extract_options"
+# 提供仅能被当前类修改的类变量定义
 require_relative "core_ext/class/attribute"
+# 警告信息和忽略特定异常
 require_relative "core_ext/kernel/reporting"
 require_relative "core_ext/kernel/singleton_class"
+# 提供字符串的核心扩展
 require_relative "core_ext/string/filters"
+# 提供了标记deprecated的能力
 require_relative "deprecation"
 require "thread"
 
 module ActiveSupport
+  # callbacks提供了一种编程范式,丰富了类层级扩展的模式,思想类似AOP
+  # 其重要应用之一是activerecord的各种callbacks实现
   # Callbacks are code hooks that are run at key points in an object's life cycle.
   # The typical use case is to have a base class define a set of callbacks
   # relevant to the other functionality it supplies, so that subclasses can
@@ -67,6 +75,7 @@ module ActiveSupport
       class_attribute :__callbacks, instance_writer: false, default: {}
     end
 
+    # 支持以下types,其中around相当于把action封装进callback,使用yield指定调用
     CALLBACK_FILTER_TYPES = [:before, :after, :around]
 
     # Runs the callbacks for the given event.
@@ -97,9 +106,15 @@ module ActiveSupport
       if callbacks.empty?
         yield if block_given?
       else
+        # 如果存在callback注册,则创建一个保存callback的运行属性对象
+        # 参数分别是target,halted,value
         env = Filters::Environment.new(self, false, nil)
+        # compile是把已有的callbacks构建成可执行序列并返回
         next_sequence = callbacks.compile
 
+        # 包含around的运行机制,这里希望around也是序列执行,而非嵌套执行
+        # 由apply函数可知,每当出现一个around,就会发生一次序列nested
+        # 因此这里采用while true的方式执行嵌套的callbacks
         invoke_sequence = Proc.new do
           skipped = nil
           while true
@@ -128,11 +143,13 @@ module ActiveSupport
 
         # Common case: no 'around' callbacks defined
         if next_sequence.final?
+          #如果非around,就顺序执行,忽略存在nested的情形
           next_sequence.invoke_before(env)
           env.value = !env.halted && (!block_given? || yield)
           next_sequence.invoke_after(env)
           env.value
         else
+          #如果是around，就直接运行调用序列
           invoke_sequence.call
         end
       end
@@ -155,9 +172,12 @@ module ActiveSupport
         end
       end
 
+      # 用于拼装可执行的callbacks序列,并被插入至执行序列
       module Filters
+        # Struct要求对象初始化时必须含有所有属性，而OpenStruct则不强制要求
         Environment = Struct.new(:target, :halted, :value)
 
+        #实现了before类型的callback运行机制
         class Before
           def self.build(callback_sequence, user_callback, user_conditions, chain_config, filter)
             halted_lambda = chain_config[:terminator]
@@ -176,6 +196,7 @@ module ActiveSupport
               halted = env.halted
 
               if !halted && user_conditions.all? { |c| c.call(target, value) }
+                #执行callback
                 result_lambda = -> { user_callback.call target, value }
                 env.halted = halted_lambda.call(target, result_lambda)
                 if env.halted
@@ -209,6 +230,7 @@ module ActiveSupport
           private_class_method :halting
         end
 
+        # 与Before类似
         class After
           def self.build(callback_sequence, user_callback, user_conditions, chain_config)
             if chain_config[:skip_after_callbacks_if_terminated]
@@ -277,6 +299,7 @@ module ActiveSupport
         end
       end
 
+      # Callback存储了每个callback的具体内容
       class Callback #:nodoc:#
         def self.build(chain, filter, kind, options)
           if filter.is_a?(String)
@@ -330,6 +353,9 @@ module ActiveSupport
           end
         end
 
+        # 构建包含callback的可运行代码,注意callback是可以包含条件的
+        # 这里的apply函数会返回一个新的序列对象
+        # 在around模式下,序列对象会被嵌套创建
         # Wraps code with filter
         def apply(callback_sequence)
           user_conditions = conditions_lambdas
@@ -341,6 +367,7 @@ module ActiveSupport
           when :after
             Filters::After.build(callback_sequence, user_callback.make_lambda, user_conditions, chain_config)
           when :around
+            # 只有around会创建新的调用序列
             callback_sequence.around(user_callback, user_conditions)
           end
         end
@@ -365,6 +392,7 @@ module ActiveSupport
           end
       end
 
+      # 可执行用户代码的模版
       # A future invocation of user-supplied code (either as a callback,
       # or a condition filter).
       class CallTemplate # :nodoc:
@@ -461,6 +489,8 @@ module ActiveSupport
         end
       end
 
+      # 这里给出了一个运行callback的技巧。原本应该是嵌套执行
+      # 由于调用栈的问题改成了序列执行
       # Execute before and after filters in a sequence instead of
       # chaining them with nested lambda calls, see:
       # https://github.com/rails/rails/issues/18011
@@ -513,6 +543,7 @@ module ActiveSupport
         end
       end
 
+      # 保存callbacks链，实现了重要的compile函数
       class CallbackChain #:nodoc:#
         include Enumerable
 
@@ -606,6 +637,7 @@ module ActiveSupport
           end
       end
 
+      # 下列类方法提供了用户界面
       module ClassMethods
         def normalize_callback_params(filters, block) # :nodoc:
           type = CALLBACK_FILTER_TYPES.include?(filters.first) ? filters.shift : :before
@@ -614,6 +646,8 @@ module ActiveSupport
           [type, filters, options.dup]
         end
 
+        # 在更新callback序列时用到了后代查询,因为任何一次callback序列的修改相当于
+        # 修改整个继承链上的callback序列
         # This is used internally to append, prepend and skip callbacks to the
         # CallbackChain.
         def __update_callbacks(name) #:nodoc:
@@ -623,6 +657,8 @@ module ActiveSupport
           end
         end
 
+        # 注册一个callback
+        # 参数分别是原始方法名,事件类型,callback函数,条件
         # Install a callback for the given event.
         #
         #   set_callback :save, :before, :before_method
@@ -677,11 +713,13 @@ module ActiveSupport
           end
 
           __update_callbacks(name) do |target, chain|
+            #还提供了prepend和append选项开关
             options[:prepend] ? chain.prepend(*mapped) : chain.append(*mapped)
             target.set_callbacks name, chain
           end
         end
 
+        # 选择忽略某个已注册的callback
         # Skip a previously set callback. Like +set_callback+, <tt>:if</tt> or
         # <tt>:unless</tt> options may be passed in order to control when the
         # callback is skipped.
@@ -712,6 +750,7 @@ module ActiveSupport
                 raise ArgumentError, "#{type.to_s.capitalize} #{name} callback #{filter.inspect} has not been defined"
               end
 
+              # 如果skip包含条件选项，则创建一个新的callback对象
               if callback && (options.key?(:if) || options.key?(:unless))
                 new_callback = callback.merge_conditional_options(chain, if_option: options[:if], unless_option: options[:unless])
                 chain.insert(chain.index(callback), new_callback)
@@ -736,6 +775,9 @@ module ActiveSupport
           set_callbacks(name, callbacks.dup.clear)
         end
 
+        # 提供了更加灵活的自定义事件机制,但稍复杂
+        # 其中如果定义事件时没有定义scope,则默认调用对应事件名称的对象方法
+        # 如果包含了scope(kind,name),则调用对应自定义名称的对象方法
         # Define sets of events in the object life cycle that support callbacks.
         #
         #   define_callbacks :validate
@@ -743,6 +785,7 @@ module ActiveSupport
         #
         # ===== Options
         #
+        # terminator选项允许用户选择当某个callback返回false时,是否终止整个序列执行
         # * <tt>:terminator</tt> - Determines when a before filter will halt the
         #   callback chain, preventing following before and around callbacks from
         #   being called and the event from being triggered.
@@ -822,6 +865,7 @@ module ActiveSupport
 
             set_callbacks name, CallbackChain.new(name, options)
 
+            # 相当于扩展了原有的callback模块
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def _run_#{name}_callbacks(&block)
                 run_callbacks #{name.inspect}, &block

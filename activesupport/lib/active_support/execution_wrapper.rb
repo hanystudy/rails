@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+# callback允许在类范围自定义callback事件和指定callback函数
 require_relative "callbacks"
 
 module ActiveSupport
+  # executionwrapper利用callback向上层提供了基本的方法调用封装格式
   class ExecutionWrapper
     include ActiveSupport::Callbacks
 
@@ -13,6 +15,7 @@ module ActiveSupport
     define_callbacks :run
     define_callbacks :complete
 
+    # 这里的callback采用to_xxx定义
     def self.to_run(*args, &block)
       set_callback(:run, *args, &block)
     end

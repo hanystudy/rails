@@ -41,18 +41,21 @@ module ActiveSupport
   autoload :CurrentAttributes
   # 用于解决文件、名字的依赖加载
   autoload :Dependencies
-	# 通过inherited钩子实现所有子孙的追踪
+  # 通过inherited钩子实现所有子孙的追踪
   autoload :DescendantsTracker
+  # executionwrapper利用callback向上层提供了基本的方法调用封装格式
   autoload :ExecutionWrapper
+  # 直接继承wrapper类
   autoload :Executor
-	# 用于在i18n框架中实现词典文件的实时更新检查
+  # 用于在i18n框架中实现词典文件的实时更新检查
   autoload :FileUpdateChecker
-	# 用于事件模型下的文件更新检查
+  # 用于事件模型下的文件更新检查
   autoload :EventedFileUpdateChecker
-	# 提供通知订阅功能
+  # 提供通知订阅功能
   autoload :LogSubscriber
-	# 提供基本的通知功能, 里面实现了基于ruby的插桩功能
+  # 提供基本的通知功能, 里面实现了基于ruby的插桩功能
   autoload :Notifications
+  # 定义了prepare和class_unload事件,用于在程序启动和销毁时运行相关callback
   autoload :Reloader
 
   eager_autoload do

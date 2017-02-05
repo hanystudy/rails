@@ -2,6 +2,9 @@
 
 require_relative "execution_wrapper"
 
+# reload继承了ExecutionWrapper,从而具有执行to_run和定义callback的能力
+# 这里再向上层提供更细节的接口
+# 其中prepare和class_unload代表了应用启动以及销毁时的callback接口
 module ActiveSupport
   #--
   # This class defines several callbacks:

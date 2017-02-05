@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Kernel
+  #reporting主要是提供ruby底层的警告信息和异常忽略函数
   module_function
 
   # Sets $VERBOSE to +nil+ for the duration of the block and back to its original

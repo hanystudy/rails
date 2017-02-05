@@ -3,6 +3,8 @@
 module ActiveSupport
   # This module provides an internal implementation to track descendants
   # which is faster than iterating through ObjectSpace.
+  # 一种替代ruby默认ObjectSpace实现的后代查询扩展,目的是为了加速
+  # 由于使用了类变量，因此存在线程安全问题
   module DescendantsTracker
     @@direct_descendants = {}
 
